@@ -1,8 +1,10 @@
-Django
+Django~=5.2
 Pillow
 django-crispy-forms
 crispy-bootstrap5
 python-dotenv
-fastapi
+fastapi~=0.115.12
 uvicorn
 python-multipart
+pydantic~=2.11.3
+asgiref~=3.8.1

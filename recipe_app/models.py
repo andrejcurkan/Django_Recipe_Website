@@ -22,6 +22,7 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
+    objects = None
     title = models.CharField(max_length=200)
     description = models.TextField()
     cooking_steps = models.TextField()

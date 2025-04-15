@@ -1,17 +1,40 @@
 from fastapi import APIRouter, HTTPException
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Recipe, Category, Ingredient
+from recipe_app.models import Recipe, Category, Ingredient
 from .schemas import RecipeSchema, CategorySchema, IngredientSchema
+from fastapi import APIRouter
+from django_setup import setup_django  # Импортируем функцию настройки
+
+# Инициализируем Django перед всеми импортами моделей
+setup_django()
+
+# Теперь безопасно импортируем модели
+from recipe_app.models import Recipe, Category, Ingredient
+from fastapi import APIRouter
+
+# Не импортируйте модели здесь! Они будут импортированы после инициализации Django
+router = APIRouter()
+
+@router.get("/recipes")
+async def get_recipes():
+    from recipe_app.models import Recipe  # Ленивый импорт
+    return {"recipes": list(Recipe.objects.all().values())}
+
+@router.get("/recipes/{recipe_id}/", response_model=RecipeSchema)
+async def get_recipe(recipe_id: int):from fastapi import APIRouter
+from django_init import init_django  # Импортируем из текущей директории
+
+# Инициализируем Django ПЕРЕД импортом моделей
+init_django()
+
+# Теперь безопасно импортируем модели
+from recipe_app.models import Recipe, Category, Ingredient
 
 router = APIRouter()
 
-@router.get("/recipes/", response_model=list[RecipeSchema])
-async def get_all_recipes():
-    recipes = Recipe.objects.all()
-    return list(recipes)
-
-@router.get("/recipes/{recipe_id}/", response_model=RecipeSchema)
-async def get_recipe(recipe_id: int):
+@router.get("/recipes")
+async def get_recipes():
+    return {"recipes": list(Recipe.objects.all().values())}
     try:
         return Recipe.objects.get(pk=recipe_id)
     except ObjectDoesNotExist:
